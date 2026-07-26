@@ -1,0 +1,101 @@
+customer_id,first_name,last_name,email,phone,city,state,country,signup_date,customer_segment
+CUST000001,Mahika,Konda,duttapahal@yahoo.com,+913511615594,Mumbai,Nagaland,India,2022-12-12,Regular
+CUST000002,Chaaya,Memon,nihalshere@yahoo.com,8350305641,Tezpur,Tamil Nadu,India,2024-05-04,Regular
+CUST000003,Zaid,Randhawa,pahalbhatt@yahoo.com,7848018451,Raebareli,Goa,India,2023-03-10,Silver
+CUST000004,Karan,Tella,chadavedika@gmail.com,2278248963,Bijapur,Madhya Pradesh,India,2022-09-28,Regular
+CUST000005,Upkaar,Dara,ikala@gmail.com,9737631165,Bulandshahr,Manipur,India,2022-04-09,Regular
+CUST000006,Bhavani,Rau,esunder@gmail.com,+912606474687,Jhansi,Jharkhand,India,2023-11-11,Regular
+CUST000007,Bhavani,Murthy,advika35@gmail.com,02475107991,Siwan,Gujarat,India,2022-03-24,Regular
+CUST000008,Owen,Biswas,hemaljani@hotmail.com,08740164005,Firozabad,Goa,India,2025-07-27,Regular
+CUST000009,Aayush,Choudhury,warjasgaba@gmail.com,+912563421607,Kollam,Uttarakhand,India,2024-05-14,Silver
+CUST000010,Michael,Kari,chopraradha@yahoo.com,06981693406,Saharsa,Uttar Pradesh,India,2022-01-21,Silver
+CUST000011,Upasna,Boase,modibhavini@gmail.com,9577738721,Kottayam,Sikkim,India,2023-05-12,Silver
+CUST000012,Jacob,Mukherjee,patrickvasa@yahoo.com,3172788957,Motihari,Manipur,India,2024-11-23,Regular
+CUST000013,Varenya,Lad,tanishbhatt@yahoo.com,08760366909,Morena,Andhra Pradesh,India,2023-10-31,Platinum
+CUST000014,Robert,Saini,chackopriya@gmail.com,+910465375564,Nizamabad,Uttarakhand,India,2024-11-11,Regular
+CUST000015,Adya,Zacharia,ishwargade@yahoo.com,0496631931,Ghaziabad,Uttar Pradesh,India,2025-03-26,Regular
+CUST000016,Prisha,Walia,usarin@hotmail.com,03147379965,Shimla,West Bengal,India,2024-12-04,Silver
+CUST000017,Yagnesh,Kala,jyoti78@hotmail.com,08557444313,Jamshedpur,Telangana,India,2022-05-15,Silver
+CUST000018,Janaki,Sule,maneupasna@yahoo.com,02047116719,Saharanpur,Chhattisgarh,India,2023-01-23,Platinum
+CUST000019,Jeet,Dani,falandugar@gmail.com,09740344713,Giridih,Sikkim,India,2025-03-22,Regular
+CUST000020,Deepa,Kar,baralrachana@hotmail.com,4013990490,Nandyal,Mizoram,India,2024-06-29,Gold
+CUST000021,Gautam,Sarin,ekiya16@hotmail.com,+918760385977,Kurnool,Himachal Pradesh,India,2025-01-28,Regular
+CUST000022,Urvashi,Sundaram,dkohli@hotmail.com,03982146584,Ichalkaranji,Telangana,India,2022-08-05,Regular
+CUST000023,Falan,Sekhon,dateyadavi@hotmail.com,+917187026217,Sonipat,Punjab,India,2023-12-10,Silver
+CUST000024,Nitesh,Walla,jagrati56@gmail.com,6922219693,Ballia,Chhattisgarh,India,2022-09-05,Gold
+CUST000025,Lakshmi,Sharaf,chakrika40@hotmail.com,00909743953,Udupi,Himachal Pradesh,India,2022-11-10,Regular
+CUST000026,Anusha,More,hamsini17@gmail.com,+916851604817,Firozabad,Odisha,India,2025-11-09,Silver
+CUST000027,Chatura,Kaur,qprabhakar@hotmail.com,6926179640,Bellary,Manipur,India,2025-02-07,Regular
+CUST000028,Pratyush,Chaudhary,virajnarasimhan@gmail.com,0422842102,Secunderabad,Uttar Pradesh,India,2025-01-08,Regular
+CUST000029,Adweta,Ghosh,srinivasneelima@yahoo.com,+917711592124,Eluru,Punjab,India,2024-04-09,Silver
+CUST000030,Zayyan,Sani,chadagirik@yahoo.com,5280988516,Bhusawal,West Bengal,India,2022-08-10,Silver
+CUST000031,Nimrat,Pandey,ayush24@hotmail.com,05502296120,Bettiah,Gujarat,India,2023-06-16,Regular
+CUST000032,Utkarsh,Om,paiqushi@gmail.com,9784036900,Barasat,Gujarat,India,2024-01-31,Regular
+CUST000033,Mohini,Narang,travel@hotmail.com,01605297516,Latur,Maharashtra,India,2025-03-24,Regular
+CUST000034,Rudra,Mukherjee,wshetty@hotmail.com,7995527177,Panipat,Odisha,India,2023-11-14,Silver
+CUST000035,Yashica,Borah,davidseshadri@gmail.com,01820377889,Bharatpur,Kerala,India,2022-06-23,Regular
+CUST000036,Samarth,Nigam,krisha52@hotmail.com,8168505423,Shivpuri,Gujarat,India,2022-04-10,Silver
+CUST000037,Garima,Brahmbhatt,ikaur@gmail.com,03597746886,Kollam,Uttar Pradesh,India,2025-05-31,Regular
+CUST000038,Ati,Srivastava,warinder61@yahoo.com,+915152204727,Tadepalligudem,Andhra Pradesh,India,2023-10-18,Gold
+CUST000039,Lavanya,Kale,maanasmanne@yahoo.com,5396218518,Pali,West Bengal,India,2024-09-04,Regular
+CUST000040,Rishi,Prakash,calebiyengar@gmail.com,08687403450,Darbhanga,Bihar,India,2026-04-01,Regular
+CUST000041,Ryan,Sarraf,damini79@hotmail.com,+917570596401,Bharatpur,Mizoram,India,2025-11-26,Regular
+CUST000042,Eshana,Sarma,pmurthy@yahoo.com,+910278681447,Pudukkottai,Jharkhand,India,2023-03-10,Regular
+CUST000043,Darsh,Deshmukh,xbal@hotmail.com,07829114678,Alappuzha,Uttarakhand,India,2024-03-27,Silver
+CUST000044,Nitara,Borah,farhan43@hotmail.com,02498182992,Mahbubnagar,Karnataka,India,2025-08-24,Gold
+CUST000045,Chaitaly,Bath,maanas55@hotmail.com,02588153714,Shahjahanpur,Chhattisgarh,India,2025-05-25,Regular
+CUST000046,Mohini,Rajagopalan,chanakya04@yahoo.com,7480162456,Ranchi,Madhya Pradesh,India,2023-03-06,Regular
+CUST000047,Radhika,Mani,bathbalvan@gmail.com,07872982595,Singrauli,Punjab,India,2022-10-10,Silver
+CUST000048,Zehaan,Upadhyay,hgarde@hotmail.com,6230913075,Saharanpur,Maharashtra,India,2022-12-07,Regular
+CUST000049,Yamini,Sinha,umang44@hotmail.com,7575844198,Tenali,Uttarakhand,India,2023-05-13,Silver
+CUST000050,Maanav,Basak,sachdevganga@hotmail.com,+912082677345,Allahabad,Tripura,India,2025-08-04,Regular
+CUST000051,Anjali,Gill,reyansh15@gmail.com,04205493296,Kottayam,Karnataka,India,2025-04-10,Regular
+CUST000052,Charvi,Goyal,nathaniel68@hotmail.com,01459332727,Vijayanagaram,Tamil Nadu,India,2025-12-25,Regular
+CUST000053,Jatin,Bumb,uppalsanaya@gmail.com,+918679087406,Delhi,Telangana,India,2022-02-05,Silver
+CUST000054,Aradhana,Sampath,gokhalemaya@hotmail.com,3004786863,Jaunpur,Kerala,India,2022-12-22,Silver
+CUST000055,Ijaya,Chowdhury,vivaan95@hotmail.com,5342836440,Purnia,Nagaland,India,2024-04-08,Silver
+CUST000056,Orinder,Raj,qkibe@gmail.com,1751830469,Srinagar,Gujarat,India,2024-11-22,Regular
+CUST000057,Ishita,Natarajan,gshukla@hotmail.com,03556093204,Sagar,Chhattisgarh,India,2025-09-12,Regular
+CUST000058,Jyoti,Raghavan,vihaanbir@hotmail.com,+913875099770,Katihar,Nagaland,India,2022-01-11,Platinum
+CUST000059,Abhiram,Wagle,upkaarmital@hotmail.com,+910166687002,Panchkula,West Bengal,India,2024-03-29,Platinum
+CUST000060,Champak,Wable,wrideshramachandran@hotmail.com,06218501631,Mahbubnagar,Tripura,India,2023-07-10,Regular
+CUST000061,Alexander,Mahajan,jalsa11@gmail.com,05412126788,Kota,Andhra Pradesh,India,2022-11-27,Gold
+CUST000062,Charita,Nair,radhikamajumdar@yahoo.com,01543799371,Avadi,Andhra Pradesh,India,2024-07-16,Gold
+CUST000063,Ranveer,Narayan,maya51@hotmail.com,8280737416,Kolhapur,Rajasthan,India,2026-04-27,Silver
+CUST000064,Jonathan,Dube,ynarula@yahoo.com,+911438889937,Katni,Manipur,India,2023-04-20,Regular
+CUST000065,Amaira,Subramanian,contractorarin@yahoo.com,+912382825867,Machilipatnam,Rajasthan,India,2023-05-17,Regular
+CUST000066,Upma,Randhawa,lipika96@hotmail.com,05792499125,Mathura,Jharkhand,India,2022-01-02,Regular
+CUST000067,Ridhi,Dhaliwal,aditya72@gmail.com,08876767721,Muzaffarnagar,Jharkhand,India,2026-02-27,Regular
+CUST000068,Jeevika,Yogi,ijaya17@gmail.com,+913959629233,Jehanabad,Kerala,India,2025-02-01,Gold
+CUST000069,Neel,Master,oborra@gmail.com,4577590175,Deoghar,Madhya Pradesh,India,2024-08-13,Regular
+CUST000070,Jagvi,Talwar,nathan41@hotmail.com,01520643611,Kakinada,Meghalaya,India,2024-01-19,Gold
+CUST000071,Jeevika,Venkataraman,lukebiswas@hotmail.com,+919275326973,Salem,Chhattisgarh,India,2022-09-02,Regular
+CUST000072,Pushti,Sanghvi,khoslaxalak@hotmail.com,+918055269658,Chittoor,Tripura,India,2026-02-18,Silver
+CUST000073,Bhavna,Atwal,mahika91@yahoo.com,03031617990,Akola,Bihar,India,2023-01-26,Regular
+CUST000074,Aashi,Gade,xvaidya@gmail.com,2524191380,Ahmedabad,Haryana,India,2026-01-16,Gold
+CUST000075,Rajata,Rajagopal,rattanekapad@yahoo.com,05187053494,Madhyamgram,Kerala,India,2023-05-29,Regular
+CUST000076,Jason,Dora,dpradhan@hotmail.com,1826199062,Jalna,Himachal Pradesh,India,2025-08-07,Platinum
+CUST000077,Nihal,Nadkarni,ubika41@gmail.com,4903521356,Dewas,Himachal Pradesh,India,2023-09-17,Silver
+CUST000078,Tanmayi,Sethi,sachidave@gmail.com,01070296670,Purnia,Goa,India,2025-05-24,Platinum
+CUST000079,Girik,Maharaj,rajajagrati@yahoo.com,05985642059,Ludhiana,Uttar Pradesh,India,2025-03-06,Regular
+CUST000080,Warinder,Wagle,lucky93@yahoo.com,02701039308,Mumbai,Karnataka,India,2026-05-28,Regular
+CUST000081,Panini,Goel,udant92@yahoo.com,4220969029,Pudukkottai,Haryana,India,2024-02-10,Regular
+CUST000082,Ekta,Narula,odikatailor@yahoo.com,6179327104,Imphal,Himachal Pradesh,India,2024-11-16,Regular
+CUST000083,Pavani,Garde,qzachariah@hotmail.com,03106987205,Purnia,Assam,India,2023-12-16,Regular
+CUST000084,Harish,Chatterjee,sanayabasu@yahoo.com,04349021158,Giridih,Haryana,India,2022-01-23,Regular
+CUST000085,Yutika,Sahota,rbrar@yahoo.com,2945116868,Bally,Mizoram,India,2022-07-02,Regular
+CUST000086,Shaurya,Chowdhury,zbarad@yahoo.com,+910745054447,Ambattur,Chhattisgarh,India,2022-04-08,Gold
+CUST000087,Naveen,Luthra,reyanshiyer@gmail.com,+917053457861,New Delhi,Kerala,India,2022-08-09,Regular
+CUST000088,Gaurang,Som,oscaranand@gmail.com,4466574374,Bhimavaram,Bihar,India,2024-05-15,Silver
+CUST000089,Megha,Misra,yravel@hotmail.com,9353875842,Durg,Bihar,India,2023-10-28,Regular
+CUST000090,Kai,Goswami,xitidar@hotmail.com,4602235697,Satna,West Bengal,India,2026-01-08,Regular
+CUST000091,Widisha,Natarajan,cagrawal@hotmail.com,5058300335,Bikaner,Bihar,India,2026-01-09,Silver
+CUST000092,Fiyaz,Bhattacharyya,jatinperi@hotmail.com,+916489090100,Erode,Manipur,India,2023-08-15,Regular
+CUST000093,Jonathan,Som,adyavirk@gmail.com,6420873753,Ahmedabad,Sikkim,India,2025-09-01,Regular
+CUST000094,Xiti,Dixit,devionkar@yahoo.com,09415521667,Kharagpur,Tamil Nadu,India,2025-07-01,Regular
+CUST000095,Fiyaz,Chowdhury,bhatnagaradvika@hotmail.com,+918993588916,Ongole,Kerala,India,2022-06-18,Silver
+CUST000096,Avi,Apte,fsem@yahoo.com,01701660880,Mahbubnagar,Punjab,India,2022-11-02,Regular
+CUST000097,Vedant,Om,kumarrohan@gmail.com,03735160917,Giridih,Mizoram,India,2024-11-20,Silver
+CUST000098,Aahana,Wali,nitaravala@yahoo.com,8583339452,Ambala,Nagaland,India,2022-12-06,Regular
+CUST000099,Patrick,Srinivasan,parmersneha@gmail.com,8386384066,Satara,Nagaland,India,2023-08-14,Regular
+CUST000100,Ladli,Jain,abdul57@hotmail.com,+912590947985,Ratlam,Mizoram,India,2023-03-12,Regular

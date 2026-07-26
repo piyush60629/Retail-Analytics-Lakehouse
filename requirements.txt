@@ -1,0 +1,5 @@
+pandas
+pyspark
+faker
+pyarrow
+python-dotenv
