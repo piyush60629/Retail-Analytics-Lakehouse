@@ -2,7 +2,7 @@ from __future__ import annotations
 import os
 import sys
 
-from src.common.storage_config import join_storage_path
+from src.common.storage_config import LOCAL_DATA_ROOT, join_storage_path
 
 import json
 from datetime import datetime
@@ -281,6 +281,21 @@ def read_bronze_dataset(
         raise FileNotFoundError(
             f"Bronze dataset not found: {dataset_path}"
         )
+
+    # Prefer the validated "valid" output so quarantined rows
+    # never flow into CDC, Silver or Gold. Fall back to raw
+    # Bronze for batches that were never validated.
+    valid_path = join_storage_path(
+        LOCAL_DATA_ROOT,
+        "validated",
+        f"batch_date={batch_date}",
+        dataset_name,
+        "valid",
+    )
+
+    if spark_path_exists(spark, valid_path):
+        bronze_columns = spark.read.parquet(dataset_path).columns
+        return spark.read.parquet(valid_path).select(*bronze_columns)
 
     return spark.read.parquet(dataset_path)
 
