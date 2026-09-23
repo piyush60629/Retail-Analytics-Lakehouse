@@ -1,5 +1,7 @@
 # 🏪 Retail Analytics Lakehouse
 
+**🔗 Live dashboard:** https://retail-lakehouse-piyush.streamlit.app/
+
 An end-to-end **Retail Analytics Lakehouse** built using **PySpark** following the **Medallion Architecture**. The project processes raw retail data through Validation, Bronze, Silver, Incremental ETL, CDC, SCD Type 2, Fact Enrichment, Gold Layer, Data Quality, and Analytics to generate business-ready datasets.
 
 ---
@@ -93,6 +95,11 @@ Retail-Analytics-Lakehouse/
 │   ├── silver/
 │   └── validation/
 │
+├── dashboard/
+│   ├── app.py
+│   ├── export_for_dashboard.py
+│   ├── requirements.txt
+│   └── data/
 ├── run_pipeline.py
 ├── requirements.txt
 ├── .env.example
@@ -110,17 +117,46 @@ git clone https://github.com/piyush60629/Retail-Analytics-Lakehouse.git
 cd Retail-Analytics-Lakehouse
 ```
 
-Install dependencies:
+Install dependencies (Java 17+ is required for PySpark):
 
 ```bash
 pip install -r requirements.txt
 ```
 
-Run the complete pipeline:
+**Initial load (first batch)**
 
 ```bash
-python run_pipeline.py --batch-date YYYY-MM-DD
+python -m src.data_generator.generate_data
+python -m src.incremental --batch-date 2026-07-20
+python -m src.silver --batch-date 2026-07-20
+python -m src.scd2 --batch-date 2026-07-20 --initialise
+python run_pipeline.py --batch-date 2026-07-20 --start-from src.fact_enrichment
 ```
+
+**Incremental batch (next day)**
+
+`simulate_next_day` changes the source files the way a real system would: segment upgrades, address changes, new customers, price changes, new orders and a few bad rows.
+
+```bash
+python -m src.data_generator.simulate_next_day --batch-date 2026-07-21
+python run_pipeline.py --batch-date 2026-07-21
+```
+
+---
+
+## 📈 Dashboard
+
+The `dashboard/` folder contains a Streamlit app built on the pipeline's real output: executive KPIs, monthly revenue, category and segment revenue, payments, top products and customers, validation results, CDC counts, SCD Type 2 history and all Gold data-quality checks.
+
+After a pipeline run, export the results (small CSVs, no Spark needed) and start the app:
+
+```bash
+python -m dashboard.export_for_dashboard --batch-date 2026-07-21
+pip install -r dashboard/requirements.txt
+streamlit run dashboard/app.py
+```
+
+The live app is hosted free on Streamlit Community Cloud and reads the exported files in `dashboard/data/`.
 
 ---
 
