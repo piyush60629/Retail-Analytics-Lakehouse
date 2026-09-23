@@ -142,7 +142,9 @@ def build_daily_sales_summary(
             ).alias("net_revenue"),
 
             F.countDistinct(
-                "customer_sk"
+                "customer_id"
+                if "customer_id" in fact_sales.columns
+                else "customer_sk"
             ).alias("unique_customers"),
         )
         .withColumn(
@@ -204,9 +206,9 @@ def build_product_performance(
         dataset_name="dim_product",
     )
 
-    current_products = current_dimension_records(
-        dim_product
-    )
+    # Use every SCD2 version: a sale must keep the product
+    # version that was valid when it happened.
+    current_products = dim_product
 
     product_name_column = find_existing_column(
         current_products,
@@ -365,9 +367,9 @@ def build_customer_performance(
         dataset_name="dim_customer",
     )
 
-    current_customers = current_dimension_records(
-        dim_customer
-    )
+    # Use every SCD2 version: a sale must keep the customer
+    # version that was valid when it happened.
+    current_customers = dim_customer
 
     customer_name_column = find_existing_column(
         current_customers,
@@ -663,12 +665,17 @@ def build_executive_kpis(
                 "order_sk"
             ).alias("total_orders"),
 
+            # Count real customers/products, not SCD2 versions.
             F.countDistinct(
-                "customer_sk"
+                "customer_id"
+                if "customer_id" in fact_sales.columns
+                else "customer_sk"
             ).alias("total_customers"),
 
             F.countDistinct(
-                "product_sk"
+                "product_id"
+                if "product_id" in fact_sales.columns
+                else "product_sk"
             ).alias(
                 "total_products_sold"
             ),
