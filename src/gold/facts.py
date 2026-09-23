@@ -115,7 +115,25 @@ def prepare_order_items(
             F.col("gross_amount").cast(MONEY_TYPE),
         )
 
-    if "discount_amount" not in dataframe.columns:
+    if (
+        "discount_amount" not in dataframe.columns
+        and "discount_percentage" in dataframe.columns
+    ):
+        # Source sends a percentage, not an amount. Silver's
+        # net_amount ignored it, so drop it and recompute below.
+        dataframe = dataframe.drop("net_amount").withColumn(
+            "discount_amount",
+            F.round(
+                F.col("gross_amount")
+                * F.coalesce(
+                    F.col("discount_percentage").cast(MONEY_TYPE),
+                    F.lit(0).cast(MONEY_TYPE),
+                )
+                / F.lit(100),
+                2,
+            ).cast(MONEY_TYPE),
+        )
+    elif "discount_amount" not in dataframe.columns:
         dataframe = dataframe.withColumn(
             "discount_amount",
             F.lit(0).cast(MONEY_TYPE),
@@ -655,9 +673,18 @@ def build_fact_payment(
         )
 
     if "refund_amount" not in dataframe.columns:
+        # Source has no refund column: a REFUNDED payment
+        # refunds its full amount.
+        refunded = (
+            F.upper(F.trim(F.col("payment_status"))) == "REFUNDED"
+            if "payment_status" in dataframe.columns
+            else F.lit(False)
+        )
         dataframe = dataframe.withColumn(
             "refund_amount",
-            F.lit(0).cast(MONEY_TYPE),
+            F.when(refunded, F.col("payment_amount"))
+            .otherwise(F.lit(0))
+            .cast(MONEY_TYPE),
         )
     else:
         dataframe = dataframe.withColumn(
