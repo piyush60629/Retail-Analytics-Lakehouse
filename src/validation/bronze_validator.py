@@ -66,6 +66,7 @@ ALLOWED_VALUES = {
     "payments": {
         "payment_status": [
             "Pending",
+            "Success",
             "Completed",
             "Failed",
             "Refunded",
@@ -461,6 +462,7 @@ def validate_dataset(
     dataframe: DataFrame,
     dataset_name: str,
     bronze_dataframes: Dict[str, DataFrame],
+    rejected_orders: DataFrame | None = None,
 ) -> DataFrame:
     """Run all validations for one Bronze dataset."""
 
@@ -506,6 +508,23 @@ def validate_dataset(
 
     elif dataset_name == "payments":
         dataframe = validate_payment_rules(dataframe)
+
+    # Cascade: an item or payment whose parent order was quarantined
+    # cannot be loaded either, otherwise it becomes an orphan fact.
+    if (
+        rejected_orders is not None
+        and dataset_name in ("order_items", "payments")
+    ):
+        dataframe = dataframe.join(
+            F.broadcast(rejected_orders),
+            on="order_id",
+            how="left",
+        )
+        dataframe = add_error(
+            dataframe,
+            F.col("_parent_rejected").isNotNull(),
+            "PARENT_ORDER_QUARANTINED",
+        ).drop("_parent_rejected")
 
     dataframe = dataframe.withColumn(
         "_validation_status",
@@ -752,12 +771,25 @@ def run_validation(batch_date: str) -> None:
         )
         print("=" * 110)
 
+        rejected_orders = None
+
         for dataset_name, bronze_df in bronze_dataframes.items():
             validated_df = validate_dataset(
                 dataframe=bronze_df,
                 dataset_name=dataset_name,
                 bronze_dataframes=bronze_dataframes,
+                rejected_orders=rejected_orders,
             ).cache()
+
+            if dataset_name == "orders":
+                rejected_orders = (
+                    validated_df
+                    .filter(F.size(F.col("_validation_errors")) > 0)
+                    .select("order_id")
+                    .distinct()
+                    .withColumn("_parent_rejected", F.lit(True))
+                    .cache()
+                )
 
             audit_record = write_validation_results(
                 dataframe=validated_df,
