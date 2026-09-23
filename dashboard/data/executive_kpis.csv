@@ -1,0 +1,2 @@
+batch_date,total_orders,total_customers,total_products_sold,total_items_sold,gross_revenue,total_discount,total_tax,total_revenue,average_order_value,total_payment_amount,total_refunds,net_collected_amount
+2026-07-21,50593,5011,1000,379395,14505026698.76,1135547969.85,0.00,13369478728.91,264255.5,13370832394.51,1984163357.36,11386669037.15

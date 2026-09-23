@@ -1,0 +1,12 @@
+dataset,change_type,records
+customers,UNCHANGED,4797
+customers,UPDATED,203
+customers,INSERTED,80
+order_items,UNCHANGED,150219
+order_items,INSERTED,1443
+orders,UNCHANGED,50000
+orders,INSERTED,594
+payments,UNCHANGED,50000
+payments,INSERTED,589
+products,UNCHANGED,960
+products,UPDATED,40

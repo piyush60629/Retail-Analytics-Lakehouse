@@ -1,0 +1,51 @@
+batch_date,check_name,description,execution_timestamp,failed_count,status,table_name
+2026-07-21,not_null_customer_sk,Column customer_sk must not contain null values.,2026-09-23T05:23:55,0,PASS,dim_customer
+2026-07-21,not_null_customer_id,Column customer_id must not contain null values.,2026-09-23T05:23:55,0,PASS,dim_customer
+2026-07-21,not_null_effective_from,Column effective_from must not contain null values.,2026-09-23T05:23:55,0,PASS,dim_customer
+2026-07-21,not_null_record_version,Column record_version must not contain null values.,2026-09-23T05:23:55,0,PASS,dim_customer
+2026-07-21,not_null_is_current,Column is_current must not contain null values.,2026-09-23T05:23:55,0,PASS,dim_customer
+2026-07-21,unique_key,Key columns must uniquely identify each record: ['customer_sk'],2026-09-23T05:23:55,0,PASS,dim_customer
+2026-07-21,not_null_product_sk,Column product_sk must not contain null values.,2026-09-23T05:23:55,0,PASS,dim_product
+2026-07-21,not_null_product_id,Column product_id must not contain null values.,2026-09-23T05:23:55,0,PASS,dim_product
+2026-07-21,not_null_effective_from,Column effective_from must not contain null values.,2026-09-23T05:23:55,0,PASS,dim_product
+2026-07-21,not_null_record_version,Column record_version must not contain null values.,2026-09-23T05:23:55,0,PASS,dim_product
+2026-07-21,not_null_is_current,Column is_current must not contain null values.,2026-09-23T05:23:55,0,PASS,dim_product
+2026-07-21,unique_key,Key columns must uniquely identify each record: ['product_sk'],2026-09-23T05:23:55,0,PASS,dim_product
+2026-07-21,not_null_date_key,Column date_key must not contain null values.,2026-09-23T05:23:55,0,PASS,dim_date
+2026-07-21,not_null_calendar_date,Column calendar_date must not contain null values.,2026-09-23T05:23:55,0,PASS,dim_date
+2026-07-21,unique_key,Key columns must uniquely identify each record: ['date_key'],2026-09-23T05:23:55,0,PASS,dim_date
+2026-07-21,not_null_sales_sk,Column sales_sk must not contain null values.,2026-09-23T05:23:55,0,PASS,fact_sales
+2026-07-21,not_null_order_sk,Column order_sk must not contain null values.,2026-09-23T05:23:55,0,PASS,fact_sales
+2026-07-21,not_null_customer_sk,Column customer_sk must not contain null values.,2026-09-23T05:23:55,0,PASS,fact_sales
+2026-07-21,not_null_product_sk,Column product_sk must not contain null values.,2026-09-23T05:23:55,0,PASS,fact_sales
+2026-07-21,not_null_order_date_key,Column order_date_key must not contain null values.,2026-09-23T05:23:55,0,PASS,fact_sales
+2026-07-21,unique_key,Key columns must uniquely identify each record: ['sales_sk'],2026-09-23T05:23:55,0,PASS,fact_sales
+2026-07-21,not_null_payment_sk,Column payment_sk must not contain null values.,2026-09-23T05:23:55,0,PASS,fact_payment
+2026-07-21,not_null_order_sk,Column order_sk must not contain null values.,2026-09-23T05:23:55,0,PASS,fact_payment
+2026-07-21,not_null_customer_sk,Column customer_sk must not contain null values.,2026-09-23T05:23:55,0,PASS,fact_payment
+2026-07-21,not_null_payment_date_key,Column payment_date_key must not contain null values.,2026-09-23T05:23:55,0,PASS,fact_payment
+2026-07-21,unique_key,Key columns must uniquely identify each record: ['payment_sk'],2026-09-23T05:23:55,0,PASS,fact_payment
+2026-07-21,foreign_key_customer_sk,Every fact_sales.customer_sk must exist in dim_customer.customer_sk.,2026-09-23T05:23:55,0,PASS,fact_sales
+2026-07-21,foreign_key_product_sk,Every fact_sales.product_sk must exist in dim_product.product_sk.,2026-09-23T05:23:55,0,PASS,fact_sales
+2026-07-21,foreign_key_order_date_key,Every fact_sales.order_date_key must exist in dim_date.date_key.,2026-09-23T05:23:55,0,PASS,fact_sales
+2026-07-21,foreign_key_customer_sk,Every fact_payment.customer_sk must exist in dim_customer.customer_sk.,2026-09-23T05:23:55,0,PASS,fact_payment
+2026-07-21,foreign_key_payment_date_key,Every fact_payment.payment_date_key must exist in dim_date.date_key.,2026-09-23T05:23:55,0,PASS,fact_payment
+2026-07-21,row_count_reconciliation,enriched_order_items rows=151662; fact_sales rows=151662.,2026-09-23T05:23:55,0,PASS,fact_sales
+2026-07-21,row_count_reconciliation,enriched_payments rows=50589; fact_payment rows=50589.,2026-09-23T05:23:55,0,PASS,fact_payment
+2026-07-21,non_negative_gross_amount,Column gross_amount must not contain negative values.,2026-09-23T05:23:55,0,PASS,fact_sales
+2026-07-21,non_negative_discount_amount,Column discount_amount must not contain negative values.,2026-09-23T05:23:55,0,PASS,fact_sales
+2026-07-21,non_negative_tax_amount,Column tax_amount must not contain negative values.,2026-09-23T05:23:55,0,PASS,fact_sales
+2026-07-21,non_negative_net_amount,Column net_amount must not contain negative values.,2026-09-23T05:23:55,0,PASS,fact_sales
+2026-07-21,positive_quantity,Column quantity must be greater than zero.,2026-09-23T05:23:55,0,PASS,fact_sales
+2026-07-21,sales_amount_equation,net_amount must equal gross_amount - discount_amount + tax_amount.,2026-09-23T05:23:55,0,PASS,fact_sales
+2026-07-21,non_negative_payment_amount,Column payment_amount must not contain negative values.,2026-09-23T05:23:55,0,PASS,fact_payment
+2026-07-21,non_negative_refund_amount,Column refund_amount must not contain negative values.,2026-09-23T05:23:55,0,PASS,fact_payment
+2026-07-21,payment_amount_equation,net_payment_amount must equal payment_amount - refund_amount.,2026-09-23T05:23:55,0,PASS,fact_payment
+2026-07-21,current_scd_uniqueness,Each customer_id must have at most one current SCD2 record.,2026-09-23T05:23:55,0,PASS,dim_customer
+2026-07-21,current_scd_uniqueness,Each product_id must have at most one current SCD2 record.,2026-09-23T05:23:55,0,PASS,dim_product
+2026-07-21,valid_scd_date_range,effective_from must exist; current records may have null effective_to; historical records must have a valid effective_to.,2026-09-23T05:23:55,0,PASS,dim_customer
+2026-07-21,valid_scd_date_range,effective_from must exist; current records may have null effective_to; historical records must have a valid effective_to.,2026-09-23T05:23:55,0,PASS,dim_product
+2026-07-21,date_key_consistency_order_date_key,order_date_key must match order_date in yyyyMMdd format.,2026-09-23T05:23:55,0,PASS,fact_sales
+2026-07-21,date_key_consistency_payment_date_key,payment_date_key must match payment_date in yyyyMMdd format.,2026-09-23T05:23:55,0,PASS,fact_payment
+2026-07-21,current_scd_end_date,Current SCD2 records must have a null effective_to value.,2026-09-23T05:23:55,0,PASS,dim_customer
+2026-07-21,current_scd_end_date,Current SCD2 records must have a null effective_to value.,2026-09-23T05:23:55,0,PASS,dim_product

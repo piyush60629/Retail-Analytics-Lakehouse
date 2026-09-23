@@ -1,0 +1,16 @@
+dataset,layer,rows
+customers,Bronze (raw),5080
+customers,Validated,5080
+products,Bronze (raw),1000
+products,Validated,1000
+orders,Bronze (raw),50600
+orders,Validated,50594
+order_items,Bronze (raw),151688
+order_items,Validated,151662
+payments,Bronze (raw),50600
+payments,Validated,50589
+fact_sales,Gold,151662
+fact_payment,Gold,50589
+dim_customer,Gold,5283
+dim_product,Gold,1040
+dim_date,Gold,934

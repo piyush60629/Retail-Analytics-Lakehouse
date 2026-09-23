@@ -1,0 +1,6 @@
+batch_date,dataset_name,failure_percentage,invalid_records,pass_percentage,total_records,valid_records,validation_status
+2026-07-21,customers,0.0,0,100.0,5080,5080,SUCCESS
+2026-07-21,products,0.0,0,100.0,1000,1000,SUCCESS
+2026-07-21,orders,0.01,6,99.99,50600,50594,COMPLETED_WITH_INVALID_RECORDS
+2026-07-21,order_items,0.02,26,99.98,151688,151662,COMPLETED_WITH_INVALID_RECORDS
+2026-07-21,payments,0.02,11,99.98,50600,50589,COMPLETED_WITH_INVALID_RECORDS
