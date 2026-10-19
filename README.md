@@ -18,6 +18,8 @@ An end-to-end **Retail Analytics Lakehouse** built using **PySpark** following t
 - Gold Layer (Analytics Ready)
 - Gold Data Quality Checks
 - Business KPI & Analytics Generation
+- Structured run logs and failure snapshots for every pipeline run (`monitoring/`)
+- Reproducible failure scenarios, diagnosed by an AI agent ([Pipeline Incident Agent](https://github.com/piyush60629/Pipeline-Incident-Agent))
 
 ---
 
@@ -90,6 +92,7 @@ Retail-Analytics-Lakehouse/
 │   ├── incremental/
 │   ├── incremental_silver/
 │   ├── ingestion/
+│   ├── monitoring/        # run logs and failure snapshots
 │   ├── quality/
 │   ├── scd2/
 │   ├── silver/
@@ -100,6 +103,10 @@ Retail-Analytics-Lakehouse/
 │   ├── export_for_dashboard.py
 │   ├── requirements.txt
 │   └── data/
+├── monitoring/            # one folder per pipeline run (run.json + snapshots)
+├── scenarios/             # which failure was injected into which run
+├── scripts/
+│   └── run_failure_scenarios.py
 ├── run_pipeline.py
 ├── requirements.txt
 ├── .env.example
@@ -177,6 +184,50 @@ The live app is hosted free on Streamlit Community Cloud and reads the exported 
 
 ---
 
+## 🩺 Run Monitoring and Failure Scenarios
+
+Every `run_pipeline.py` run writes a structured run log, so a failure can be investigated after the fact (by a person or by an AI agent) without rerunning anything:
+
+```text
+monitoring/
+  index.json                       one line per run: batch date, status, failed stage, error type
+  runs/<run_id>/run.json           status, timings, exit code per stage, exception, key error lines, log tail
+  runs/<run_id>/source_files.json  raw CSVs: manifest status, rows, rows with the wrong column count,
+                                   columns added or missing vs the Bronze schema, values that do not
+                                   match numeric types, duplicate primary keys
+  runs/<run_id>/validation.json    validation summary and failed data quality rules
+  runs/<run_id>/gold_quality.json  Gold reconciliation and integrity checks
+  runs/<run_id>/layer_status.json  which Medallion layers have output for the batch date
+```
+
+Stage output is still streamed to the console. `--no-monitoring` turns the log off.
+
+### Failure scenarios
+
+`scripts/run_failure_scenarios.py` rebuilds two healthy days (2026-07-20 and 2026-07-21), then runs the real pipeline on batch 2026-07-22 five times, each time with one realistic problem in the input:
+
+| Scenario | What changes | Where the real pipeline fails |
+|---|---|---|
+| New column in products | The source adds a `currency` column | Bronze load: `MALFORMED_CSV_RECORD` |
+| Text in the price column | 60 products arrive with price `N/A` | Bronze load: `NumberFormatException: "N/A"` |
+| Duplicate orders | 800 order rows are sent twice | Ingestion: `orders contains 800 duplicate primary keys` |
+| Truncated payments file | The transfer stops at 40% of the file | Bronze load: `MALFORMED_CSV_RECORD` on the cut-off last row |
+| Started from the wrong stage | `--start-from src.gold` on a new batch | Gold: `FileNotFoundError: SCD2 dimension not found` |
+
+```bash
+python scripts/run_failure_scenarios.py --yes      # about 30 minutes; restores the healthy data at the end
+```
+
+The mapping from run id to scenario is written to `scenarios/results.json`, separately from `monitoring/`, so the run logs never say what was injected.
+
+**Found while doing this:** if a daily source file is simply not re-delivered, the manifest treats it as unchanged and the pipeline succeeds with the previous day's data. The run log makes this visible (`delivered_for_this_batch: false` in `source_files.json`), but nothing alerts on it yet.
+
+### AI diagnosis with Pipeline Incident Agent
+
+The run logs are read by [Pipeline Incident Agent](https://github.com/piyush60629/Pipeline-Incident-Agent) ([live demo](https://pipeline-incident-agent.streamlit.app/), choose *Retail Analytics Lakehouse*), a LangGraph agent that picks which evidence to check (run log, stage log, source files, validation reports, layer outputs, runbook), writes a structured diagnosis and proposes the correct `--start-from` stage for the rerun, which runs only after a person approves.
+
+---
+
 ## 📁 Sample Data
 
 The repository contains sample input files under:
@@ -204,6 +255,7 @@ Large generated datasets and intermediate pipeline outputs are excluded from Git
 
 ## ☁️ Future Enhancements
 
+- Alert when an expected daily file was not re-delivered
 - Azure Data Factory
 - Azure Data Lake Storage Gen2
 - Azure Databricks

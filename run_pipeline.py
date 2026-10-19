@@ -1,10 +1,13 @@
 from __future__ import annotations
 
 import argparse
+import os
 import subprocess
 import sys
 import time
 from dataclasses import dataclass
+
+from src.monitoring.run_log import PipelineRunLog, StageOutput
 
 
 @dataclass(frozen=True)
@@ -49,6 +52,14 @@ PIPELINE_STAGES = [
 ]
 
 
+class StageFailed(Exception):
+    def __init__(self, stage: PipelineStage, command: list[str], returncode: int) -> None:
+        super().__init__(f"{stage.name} failed with exit code {returncode}")
+        self.stage = stage
+        self.command = command
+        self.returncode = returncode
+
+
 def parse_arguments() -> argparse.Namespace:
     parser = argparse.ArgumentParser(
         description=(
@@ -75,6 +86,12 @@ def parse_arguments() -> argparse.Namespace:
         ),
     )
 
+    parser.add_argument(
+        "--no-monitoring",
+        action="store_true",
+        help="Do not write the run log and batch snapshot under monitoring/.",
+    )
+
     return parser.parse_args()
 
 
@@ -98,6 +115,7 @@ def get_stages_to_run(
 def run_stage(
     stage: PipelineStage,
     batch_date: str,
+    run_log: PipelineRunLog | None,
 ) -> None:
     command = [
         sys.executable,
@@ -110,18 +128,39 @@ def run_stage(
     print("\n" + "=" * 100)
     print(f"STARTING: {stage.name}")
     print(f"COMMAND: {' '.join(command)}")
-    print("=" * 100)
+    print("=" * 100, flush=True)
+
+    if run_log:
+        run_log.stage_started(stage.module)
 
     started_at = time.perf_counter()
+    output = StageOutput()
 
-    subprocess.run(
+    # Stream the stage's output to the console as before, and keep the last lines
+    # so a failure can be recorded in the run log.
+    with subprocess.Popen(
         command,
-        check=True,
-    )
+        stdout=subprocess.PIPE,
+        stderr=subprocess.STDOUT,
+        text=True,
+        bufsize=1,
+        env={**os.environ, "PYTHONUNBUFFERED": "1"},
+    ) as process:
+        assert process.stdout is not None
+        for line in process.stdout:
+            sys.stdout.write(line)
+            output.add(line)
+        returncode = process.wait()
 
     elapsed_seconds = (
         time.perf_counter() - started_at
     )
+
+    if run_log:
+        run_log.stage_finished(stage.module, returncode, elapsed_seconds, output)
+
+    if returncode != 0:
+        raise StageFailed(stage, command, returncode)
 
     print(
         f"\nCOMPLETED: {stage.name} "
@@ -136,26 +175,41 @@ def main() -> None:
         start_from=arguments.start_from,
     )
 
+    run_log = None
+    if not arguments.no_monitoring:
+        run_log = PipelineRunLog(
+            batch_date=arguments.batch_date,
+            stages=[{"name": s.name, "module": s.module} for s in stages],
+            start_from=arguments.start_from,
+        )
+        run_log.save()
+
     pipeline_started_at = time.perf_counter()
 
     print("\n" + "=" * 100)
     print("RETAIL ANALYTICS LAKEHOUSE PIPELINE")
     print(f"BATCH DATE: {arguments.batch_date}")
+    if run_log:
+        print(f"RUN ID:     {run_log.run_id}")
     print("=" * 100)
 
+    completed, exit_code = False, 0
     try:
         for stage in stages:
             run_stage(
                 stage=stage,
                 batch_date=arguments.batch_date,
+                run_log=run_log,
             )
+        completed = True
 
-    except subprocess.CalledProcessError as error:
+    except StageFailed as error:
+        exit_code = error.returncode
         print("\n" + "!" * 100)
         print("PIPELINE FAILED")
         print(
             f"Failed command: "
-            f"{' '.join(error.cmd)}"
+            f"{' '.join(error.command)}"
         )
         print(
             f"Exit code: {error.returncode}"
@@ -163,14 +217,21 @@ def main() -> None:
         print("Later stages were not executed.")
         print("!" * 100)
 
-        raise SystemExit(
-            error.returncode
-        ) from error
+    finally:
+        total_seconds = (
+            time.perf_counter()
+            - pipeline_started_at
+        )
+        if run_log:
+            # Anything other than a clean finish (stage failure, Ctrl+C, crash) is recorded as FAILED.
+            run_log.finish("SUCCEEDED" if completed else "FAILED", total_seconds)
+            from src.monitoring.snapshot import write_snapshot
 
-    total_seconds = (
-        time.perf_counter()
-        - pipeline_started_at
-    )
+            snapshot = write_snapshot(run_log.run_id, arguments.batch_date)
+            print(f"Run log and batch reports: {snapshot}")
+
+    if exit_code:
+        raise SystemExit(exit_code)
 
     print("\n" + "=" * 100)
     print("COMPLETE PIPELINE FINISHED SUCCESSFULLY")
