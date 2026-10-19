@@ -22,14 +22,20 @@ ERROR_LINE = re.compile(
 )
 EXCEPTION_LINE = re.compile(r"^(?P<type>[A-Za-z_][\w.]*(?:Error|Exception))\s*:\s*(?P<message>.*)$")
 # Exceptions that only wrap the real one (a failed subprocess, the Py4J bridge, Spark's generic task failure).
-WRAPPER = re.compile(r"PipelineExecutionError|Py4JJavaError|CalledProcessError|SystemExit|MALFORMED_RECORD_IN_PARSING")
+WRAPPER = re.compile(
+    r"PipelineExecutionError|Py4JJavaError|CalledProcessError|SystemExit|MALFORMED_RECORD_IN_PARSING|FAILED_READ_FILE"
+)
+# Generic Spark task-failure log lines that repeat for every error and add nothing.
+SPARK_BOILERPLATE = re.compile(r"^\d\d/\d\d/\d\d \S+ ERROR (FileFormatWriter|Executor|TaskSetManager|Utils):")
+SITE_PACKAGES = re.compile(r"\S*/site-packages/")
 
 
 def relative_paths(text: str) -> str:
     """Show paths relative to the project, so logs read the same on any machine."""
 
     root = str(PROJECT_ROOT)
-    return text.replace(f"file://{root}/", "").replace(f"{root}/", "")
+    text = text.replace(f"file://{root}/", "").replace(f"{root}/", "")
+    return SITE_PACKAGES.sub("site-packages/", text)
 
 
 def utc_now() -> str:
@@ -48,16 +54,16 @@ def extract_error(lines: Iterable[str]) -> dict[str, Any]:
 
     key_lines: list[str] = []
     for line in lines:
-        if ERROR_LINE.match(line) and not line.startswith("Traceback") and line[:400] not in key_lines:
+        if (ERROR_LINE.match(line) and not line.startswith("Traceback") and not SPARK_BOILERPLATE.match(line)
+                and line[:400] not in key_lines):
             key_lines.append(line[:400])
 
-    # The root error: the first Spark/Java "Caused by" or Python exception that is not just a wrapper.
-    root_error = None
-    for line in key_lines:
-        candidate = line.removeprefix("Caused by:").strip()
-        if (line.startswith("Caused by:") or EXCEPTION_LINE.match(line)) and not WRAPPER.search(candidate):
-            root_error = candidate
-            break
+    # The root error: the innermost Spark/Java "Caused by" (the last one), otherwise the first Python
+    # exception that is not just a wrapper around a failed subprocess.
+    causes = [line.removeprefix("Caused by:").strip() for line in key_lines if line.startswith("Caused by:")]
+    causes = [line for line in causes if not WRAPPER.search(line)]
+    exceptions = [line for line in key_lines if EXCEPTION_LINE.match(line) and not WRAPPER.search(line)]
+    root_error = causes[-1] if causes else (exceptions[0] if exceptions else None)
     return {
         "error_type": error_type,
         "error_message": (error_message or "")[:800] or None,
