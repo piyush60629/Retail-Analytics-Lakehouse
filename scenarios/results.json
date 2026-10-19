@@ -1,0 +1,38 @@
+{
+  "healthy_runs": [
+    "run-2026-07-20-152247",
+    "run-2026-07-21-152521"
+  ],
+  "scenarios": [
+    {
+      "scenario": "new_column_in_products",
+      "run_id": "run-2026-07-22-153144",
+      "exit_code": 1,
+      "description": "The product master export adds a 'currency' column in the middle of the file."
+    },
+    {
+      "scenario": "text_in_price_column",
+      "run_id": "run-2026-07-22-153206",
+      "exit_code": 1,
+      "description": "60 products arrive with price 'N/A' (the source system had no price yet)."
+    },
+    {
+      "scenario": "duplicate_orders",
+      "run_id": "run-2026-07-22-153230",
+      "exit_code": 1,
+      "description": "The order export retried a page and wrote 800 orders twice."
+    },
+    {
+      "scenario": "truncated_payments",
+      "run_id": "run-2026-07-22-153255",
+      "exit_code": 1,
+      "description": "The payments export was interrupted: the file stops at 40% of its size, mid-row."
+    },
+    {
+      "scenario": "started_from_wrong_stage",
+      "run_id": "run-2026-07-22-153327",
+      "exit_code": 1,
+      "description": "Source files are fine; the operator starts the pipeline from the wrong stage."
+    }
+  ]
+}
