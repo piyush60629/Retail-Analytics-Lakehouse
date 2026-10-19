@@ -120,8 +120,9 @@ def source_files(batch_date: str) -> dict[str, Any]:
             "path": f"raw/{relative}",
             "manifest_status": entry.get("status"),
             "manifest_batch_date": entry.get("batch_date"),
-            # A file that was not re-delivered keeps the manifest entry of an earlier batch.
-            "delivered_for_this_batch": entry.get("batch_date") == batch_date if entry else False,
+            # False when the manifest still holds an earlier batch's entry: the file was not re-delivered,
+            # or ingestion never ran for this batch (for example a run started from a later stage).
+            "registered_in_manifest_for_batch": entry.get("batch_date") == batch_date if entry else False,
             "manifest_error": entry.get("error_message"),
             **{k: v for k, v in facts.items() if k != "header"},
             "expected_columns": expected.get(dataset, []),
@@ -178,8 +179,10 @@ def update_index() -> Path:
     runs = []
     for run_file in sorted(RUNS_ROOT.glob("*/run.json")):
         record = json.loads(run_file.read_text(encoding="utf-8"))
-        runs.append({k: record.get(k) for k in ("run_id", "batch_date", "status", "started_at",
-                                                 "duration_seconds", "failed_stage", "error_type")})
+        summary = {k: record.get(k) for k in ("run_id", "batch_date", "status", "started_at", "duration_seconds",
+                                              "start_from", "failed_stage", "error_type")}
+        summary["root_error"] = (record.get("root_error") or "")[:200] or None
+        runs.append(summary)
     index = RUNS_ROOT.parent / "index.json"
     index.write_text(json.dumps({"runs": sorted(runs, key=lambda r: r["started_at"] or "")}, indent=2) + "\n",
                      encoding="utf-8")

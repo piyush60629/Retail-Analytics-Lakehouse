@@ -191,7 +191,8 @@ Every `run_pipeline.py` run writes a structured run log, so a failure can be inv
 ```text
 monitoring/
   index.json                       one line per run: batch date, status, failed stage, error type
-  runs/<run_id>/run.json           status, timings, exit code per stage, exception, key error lines, log tail
+  runs/<run_id>/run.json           status, timings, exit code per stage, exception, root error
+                                   (first real 'Caused by'), key error lines, log tail
   runs/<run_id>/source_files.json  raw CSVs: manifest status, rows, rows with the wrong column count,
                                    columns added or missing vs the Bronze schema, values that do not
                                    match numeric types, duplicate primary keys
@@ -220,7 +221,7 @@ python scripts/run_failure_scenarios.py --yes      # about 30 minutes; restores 
 
 The mapping from run id to scenario is written to `scenarios/results.json`, separately from `monitoring/`, so the run logs never say what was injected.
 
-**Found while doing this:** if a daily source file is simply not re-delivered, the manifest treats it as unchanged and the pipeline succeeds with the previous day's data. The run log makes this visible (`delivered_for_this_batch: false` in `source_files.json`), but nothing alerts on it yet.
+**Found while doing this:** if a daily source file is simply not re-delivered, the manifest treats it as unchanged and the pipeline succeeds with the previous day's data. The run log makes this visible (`registered_in_manifest_for_batch: false` in `source_files.json`), but nothing alerts on it yet.
 
 ### AI diagnosis with Pipeline Incident Agent
 

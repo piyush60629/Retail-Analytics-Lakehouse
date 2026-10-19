@@ -21,6 +21,8 @@ ERROR_LINE = re.compile(
     r"^(?:Traceback|Caused by:|[\w.]*(?:Error|Exception)\b[:\s]|.*\bERROR\b|py4j\.protocol\.Py4JJavaError)"
 )
 EXCEPTION_LINE = re.compile(r"^(?P<type>[A-Za-z_][\w.]*(?:Error|Exception))\s*:\s*(?P<message>.*)$")
+# Exceptions that only wrap the real one (a failed subprocess, the Py4J bridge, Spark's generic task failure).
+WRAPPER = re.compile(r"PipelineExecutionError|Py4JJavaError|CalledProcessError|SystemExit|MALFORMED_RECORD_IN_PARSING")
 
 
 def relative_paths(text: str) -> str:
@@ -37,16 +39,29 @@ def utc_now() -> str:
 def extract_error(lines: Iterable[str]) -> dict[str, Any]:
     """Pull the final exception and the key error lines out of a stage's output."""
 
-    lines = [relative_paths(line.rstrip()) for line in lines]
+    lines = [relative_paths(line.rstrip()).strip() for line in lines]
     error_type, error_message = None, None
     for line in lines:
-        match = EXCEPTION_LINE.match(line.strip())
+        match = EXCEPTION_LINE.match(line)
         if match:
             error_type, error_message = match.group("type"), match.group("message").strip()
-    key_lines = [line.strip()[:400] for line in lines if ERROR_LINE.match(line.strip())]
+
+    key_lines: list[str] = []
+    for line in lines:
+        if ERROR_LINE.match(line) and not line.startswith("Traceback") and line[:400] not in key_lines:
+            key_lines.append(line[:400])
+
+    # The root error: the first Spark/Java "Caused by" or Python exception that is not just a wrapper.
+    root_error = None
+    for line in key_lines:
+        candidate = line.removeprefix("Caused by:").strip()
+        if (line.startswith("Caused by:") or EXCEPTION_LINE.match(line)) and not WRAPPER.search(candidate):
+            root_error = candidate
+            break
     return {
         "error_type": error_type,
         "error_message": (error_message or "")[:800] or None,
+        "root_error": (root_error or error_message or "")[:400] or None,
         "key_error_lines": key_lines[-10:],
     }
 
@@ -93,6 +108,7 @@ class PipelineRunLog:
             "failed_stage": None,
             "error_type": None,
             "error_message": None,
+            "root_error": None,
             "stages": [
                 {"name": s["name"], "module": s["module"], "status": "PENDING", "started_at": None,
                  "duration_seconds": None, "exit_code": None}
@@ -117,7 +133,7 @@ class PipelineRunLog:
             stage.update(extract_error([*output.error_lines, *output.lines]))
             stage["log_tail"] = output.tail()
             self.record.update(failed_stage=stage["name"], error_type=stage.get("error_type"),
-                               error_message=stage.get("error_message"))
+                               error_message=stage.get("error_message"), root_error=stage.get("root_error"))
         self.save()
 
     def finish(self, status: str, seconds: float) -> None:
