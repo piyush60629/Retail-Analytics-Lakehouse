@@ -2,6 +2,10 @@
 
 **🔗 Live dashboard:** https://retail-lakehouse-piyush.streamlit.app/
 
+**Highlights:** 258K rows in the latest batch flow through Validation → Bronze → CDC → Silver → SCD Type 2 → Gold · 50/50 Gold data quality checks · structured run logs and 5 reproducible failure scenarios, diagnosed by an [AI incident agent](https://github.com/piyush60629/Pipeline-Incident-Agent).
+
+![Dashboard tour: KPIs, pipeline stages, validation, CDC and SCD Type 2, data quality](docs/dashboard.gif)
+
 An end-to-end **Retail Analytics Lakehouse** built using **PySpark** following the **Medallion Architecture**. The project processes raw retail data through Validation, Bronze, Silver, Incremental ETL, CDC, SCD Type 2, Fact Enrichment, Gold Layer, Data Quality, and Analytics to generate business-ready datasets.
 
 ---
