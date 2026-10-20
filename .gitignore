@@ -81,3 +81,5 @@ project_structure.txt
 src_tree.txt
 data_tree.txt
 tests_tree.txt
+# Scenario runner working copy
+.scenario_baseline/
